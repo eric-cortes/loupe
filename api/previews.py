@@ -64,7 +64,7 @@ def _extract_jpegs(data: bytes) -> list[tuple[bytes, tuple[int, int]]]:
         try:
             with Image.open(io.BytesIO(jpeg)) as img:
                 size = img.size
-        except Exception:
+        except (OSError, ValueError):
             continue
         found.append((jpeg, size))
     return found
@@ -99,7 +99,7 @@ def get_preview_jpeg(lrcat_id: int, size: str) -> bytes | None:
         try:
             with Image.open(io.BytesIO(jpeg)) as img:
                 exif_orientation = img.getexif().get(274)
-        except Exception:
+        except (OSError, ValueError):
             exif_orientation = None
         if exif_orientation not in (None, 1):
             return jpeg
