@@ -22,6 +22,17 @@ export const resources = {
         rating: "★ {{value}}",
         similarity: "sim {{value}}",
       },
+      pane: {
+        close: "Close",
+        path: "Path",
+        caption: "Caption",
+        camera: "Camera",
+        captured: "Captured",
+        rating: "Rating",
+        similarity: "Similarity",
+        keywords: "Keywords",
+        collections: "Collections",
+      },
       error: {
         prefix: "Error {{status}}: {{message}}",
       },

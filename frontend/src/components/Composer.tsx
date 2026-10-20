@@ -19,26 +19,35 @@ export function Composer() {
   };
 
   return (
-    <form
-      onSubmit={submit}
-      className="sticky bottom-0 flex gap-[10px] pt-5 pb-7"
+    <div
+      className="fixed bottom-0 inset-x-0 z-20"
       style={{ background: "linear-gradient(180deg, transparent, rgb(var(--canvas)) 30%)" }}
     >
-      <textarea
-        ref={textareaRef}
-        rows={2}
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder={t("composer.placeholder")}
-        className="flex-1 px-[18px] py-[15px] text-[0.95rem] font-sans rounded-xl border border-line bg-surface text-ink resize-none transition-colors focus:outline-none focus:border-brand-soft placeholder:text-ink-muted"
-      />
-      <button
-        type="submit"
-        disabled={sending}
-        className="px-[26px] text-[0.9rem] font-semibold rounded-xl border-none bg-brand text-white cursor-pointer transition-colors hover:enabled:bg-brand-strong disabled:bg-line disabled:text-ink-muted disabled:cursor-default"
+      <form
+        onSubmit={submit}
+        className="flex gap-[10px] pt-5 pb-7 max-w-[1100px] mx-auto px-10"
       >
-        {t("composer.send")}
-      </button>
-    </form>
+        <textarea
+          ref={textareaRef}
+          rows={2}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter" || e.shiftKey || e.nativeEvent.isComposing) return;
+            e.preventDefault();
+            e.currentTarget.form?.requestSubmit();
+          }}
+          placeholder={t("composer.placeholder")}
+          className="flex-1 px-[18px] py-[15px] text-[0.95rem] font-sans rounded-xl border border-line bg-surface text-ink resize-none transition-colors focus:outline-none focus:border-brand-soft placeholder:text-ink-muted"
+        />
+        <button
+          type="submit"
+          disabled={sending}
+          className="px-[26px] text-[0.9rem] font-semibold rounded-xl border-none bg-brand text-white cursor-pointer transition-colors hover:enabled:bg-brand-strong disabled:bg-line disabled:text-ink-muted disabled:cursor-default"
+        >
+          {t("composer.send")}
+        </button>
+      </form>
+    </div>
   );
 }

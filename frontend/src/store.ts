@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { sendChat, ChatApiError } from "./api/client";
-import type { Turn } from "./types";
+import type { Match, Turn } from "./types";
 
 let nextId = 0;
 const makeId = () => String(nextId++);
@@ -8,30 +8,33 @@ const makeId = () => String(nextId++);
 type ChatState = {
   turns: Turn[];
   sending: boolean;
+  selectedMatch: Match | null;
+  selectMatch: (match: Match | null) => void;
   sendMessage: (text: string) => Promise<void>;
 };
 
 export const useChatStore = create<ChatState>((set, get) => ({
   turns: [],
   sending: false,
+  selectedMatch: null,
+
+  selectMatch: (match) => set({ selectedMatch: match }),
 
   sendMessage: async (text: string) => {
     const trimmed = text.trim();
     if (!trimmed || get().sending) return;
 
-    const history = get()
-      .turns.map((t) => ({ role: t.role, content: t.content }));
-
     const userTurn: Turn = { id: makeId(), role: "user", content: trimmed };
     const assistantTurn: Turn = { id: makeId(), role: "assistant", content: "", loading: true };
 
-    set((state) => ({
-      turns: [...state.turns, userTurn, assistantTurn],
+    set({
+      turns: [userTurn, assistantTurn],
       sending: true,
-    }));
+      selectedMatch: null,
+    });
 
     try {
-      const data = await sendChat([...history, { role: "user", content: trimmed }]);
+      const data = await sendChat([{ role: "user", content: trimmed }]);
       set((state) => ({
         turns: state.turns.map((t) =>
           t.id === assistantTurn.id

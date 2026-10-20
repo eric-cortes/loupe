@@ -17,7 +17,7 @@ export function AssistantTurn({ turn }: { turn: Turn }) {
 
   if (turn.loading) {
     return (
-      <div className="msg-rise">
+      <div className="msg-rise max-w-[1100px] mx-auto px-10">
         <Dots />
       </div>
     );
@@ -25,7 +25,7 @@ export function AssistantTurn({ turn }: { turn: Turn }) {
 
   if (turn.error) {
     return (
-      <div className="msg-rise">
+      <div className="msg-rise max-w-[1100px] mx-auto px-10">
         <span className="text-danger text-[0.9rem]">{turn.error}</span>
       </div>
     );
@@ -33,23 +33,29 @@ export function AssistantTurn({ turn }: { turn: Turn }) {
 
   return (
     <div className="msg-rise">
-      <div className="font-serif text-xl leading-relaxed font-normal max-w-[68ch] mb-[18px]">
-        {turn.content}
+      <div className="max-w-[1100px] mx-auto px-10">
+        <div className="font-serif text-xl leading-relaxed font-normal max-w-[68ch] mb-[18px]">
+          {turn.content}
+        </div>
       </div>
 
-      {turn.structured_calls && turn.structured_calls.length > 0 && (
-        <div className="font-mono text-[0.72rem] text-[#b8471f] bg-brand/[0.06] border border-brand-soft rounded-lg px-3 py-2.5 mb-[18px] whitespace-pre-wrap">
-          {t("inspector.title")}
-          {"\n"}
-          {JSON.stringify(turn.structured_calls, null, 2)}
+      {turn.matches && turn.matches.length > 0 && (
+        <div className="px-10">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-3.5">
+            {turn.matches.map((m) => (
+              <MatchCard key={m.id} match={m} />
+            ))}
+          </div>
         </div>
       )}
 
-      {turn.matches && turn.matches.length > 0 && (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-3.5">
-          {turn.matches.map((m) => (
-            <MatchCard key={m.id} match={m} />
-          ))}
+      {turn.structured_calls && turn.structured_calls.length > 0 && (
+        <div className="max-w-[1100px] mx-auto px-10 mt-[18px]">
+          <div className="font-mono text-[0.72rem] text-[#b8471f] bg-brand/[0.06] border border-brand-soft rounded-lg px-3 py-2.5 mb-[18px] whitespace-pre-wrap">
+            {t("inspector.title")}
+            {"\n"}
+            {JSON.stringify(turn.structured_calls, null, 2)}
+          </div>
         </div>
       )}
     </div>

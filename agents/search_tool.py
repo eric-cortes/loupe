@@ -73,13 +73,13 @@ def search_archive(
     if collection:
         where.append(
             "EXISTS (SELECT 1 FROM image_collections ic JOIN collections c ON c.id = ic.collection_id "
-            "WHERE ic.image_id = i.id AND c.name ILIKE %(collection)s)"
+            "WHERE ic.image_id = i.id AND unaccent(c.name) ILIKE unaccent(%(collection)s))"
         )
         params["collection"] = f"%{collection}%"
     if keyword:
         where.append(
             "EXISTS (SELECT 1 FROM image_keywords ik JOIN keywords k ON k.id = ik.keyword_id "
-            "WHERE ik.image_id = i.id AND k.name ILIKE %(keyword)s)"
+            "WHERE ik.image_id = i.id AND unaccent(k.name) ILIKE unaccent(%(keyword)s))"
         )
         params["keyword"] = f"%{keyword}%"
 

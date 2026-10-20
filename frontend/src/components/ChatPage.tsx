@@ -4,6 +4,7 @@ import { Topbar } from "./Topbar";
 import { Hero } from "./Hero";
 import { Thread } from "./Thread";
 import { Composer } from "./Composer";
+import { DetailPane } from "./DetailPane";
 
 export function ChatPage() {
   const turns = useChatStore((s) => s.turns);
@@ -16,10 +17,11 @@ export function ChatPage() {
     <>
       <Topbar />
       <Hero />
-      <div className="max-w-[1100px] mx-auto px-10 pb-10">
+      <div className="pb-40">
         <Thread />
         <Composer />
       </div>
+      <DetailPane />
     </>
   );
 }

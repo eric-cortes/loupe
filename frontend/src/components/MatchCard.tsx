@@ -1,11 +1,16 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Match } from "../types";
 import { colorFor } from "../lib/colorFor";
+import { useChatStore } from "../store";
 
 export function MatchCard({ match }: { match: Match }) {
   const { t } = useTranslation();
+  const selectMatch = useChatStore((s) => s.selectMatch);
+  const selected = useChatStore((s) => s.selectedMatch?.id === match.id);
   const label = match.collections?.[0] || match.camera_model || t("match.untitled");
   const fileName = match.file_path.split("/").pop();
+  const [failed, setFailed] = useState(false);
 
   const pills = [
     match.camera_model,
@@ -15,10 +20,24 @@ export function MatchCard({ match }: { match: Match }) {
   ].filter((p): p is string => Boolean(p));
 
   return (
-    <div
-      className="relative rounded-xl overflow-hidden aspect-[4/5] flex flex-col justify-end p-4 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.015]"
+    <button
+      type="button"
+      onClick={() => selectMatch(selected ? null : match)}
+      className={
+        "relative rounded-xl overflow-hidden aspect-[4/5] flex flex-col justify-end p-4 transition-transform duration-200 hover:-translate-y-1 hover:scale-[1.015] text-left w-full cursor-pointer" +
+        (selected ? " ring-2 ring-brand" : "")
+      }
       style={{ background: colorFor(match.id) }}
     >
+      {!failed && (
+        <img
+          src={`/images/${match.id}/preview?size=thumb`}
+          alt=""
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover"
+          onError={() => setFailed(true)}
+        />
+      )}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.75) 100%)" }}
@@ -47,6 +66,6 @@ export function MatchCard({ match }: { match: Match }) {
           </span>
         ))}
       </div>
-    </div>
+    </button>
   );
 }

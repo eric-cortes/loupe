@@ -1,4 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS unaccent;
 
 -- One row per Lightroom master image. Embedding columns are populated in
 -- Phase 2+; Phase 1 only fills metadata.
